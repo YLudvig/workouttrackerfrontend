@@ -2,9 +2,8 @@ import { environment } from "../../environments/environment";
 
 const token = localStorage.getItem("token");
 
-// Exporterar vår funktion för att registrera användare 
+// Exporterar vår funktion för att skicka prompts till chatbotten 
 export async function chatBotCall(prompt:string): Promise<{data: string}> {
-    // Backend nyttja RequestParam behöver därför skicka i form av encodeURIComponents 
     const response = await fetch(`${environment.backendApiUrl}/workouttracker/chat`, {
         method : "POST", 
         headers: {
