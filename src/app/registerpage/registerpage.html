@@ -1,1 +1,41 @@
-<p>registerpage works!</p>
+<div class="text-center h-screen">
+  <h2>Registrera dig för workouttracker</h2>
+
+  <div>
+    <label for="username"> Användarnamn: </label>
+    <input #username placeholder="Skriv in användarnamn" required />
+  </div>
+
+  <div>
+    <label for="email"> Email: </label>
+    <input #email type="email" placeholder="Skriv in email" required />
+  </div>
+
+  <div>
+    <label for="password"> Lösenord: </label>
+    <input #password type="password" placeholder="Skriv in lösenord" required />
+  </div>
+
+  <button (click)="registerUserFunction(username, email, password)">
+    Registrera dig
+  </button>
+
+  <div></div>
+
+  <!-- Felmeddelande ifall värden ej korrekt ifyllda  -->
+  @if (valuesNotFilled) {
+  <p class="text-red-500">Alla värden ej ifyllda</p>
+  }
+
+  <!-- Felmeddelande ifall email redan finns i backend -->
+  @if (emailInUse){
+    <p class="text-red-500">Email används redan</p>
+  }
+
+  <!-- Framgångsmeddelande ifall allting fungerade som väntat -->
+  @if (successfulRegistration){
+    <p class="text-green-500">Lyckad registrering</p>
+  }
+
+
+</div>
