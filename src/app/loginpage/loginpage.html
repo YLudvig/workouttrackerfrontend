@@ -1,1 +1,29 @@
-<p>loginpage works!</p>
+<div class="loginSiteDiv">
+  <h2>Logga in till journal</h2>
+  <div>
+    <label for="username"> username: </label>
+    <input #username type="username" placeholder="Skriv in username" required />
+  </div>
+  
+  <div>
+    <label for="password"> Lösenord: </label>
+    <input #password type="password" placeholder="Skriv in lösenord" required />
+  </div>
+  
+  <button (click)="loginUserFunction(username, password)">
+    Logga in 
+  </button>
+  
+  <div></div>
+
+  <!-- Felmeddelande ifall värden ej är korrekt ifyllda -->
+  @if (valuesNotFilled) {
+  <p class="errorMsg">Värden inkorrekta ifyllda</p>
+  }
+
+  <!-- Felmeddelande ifall inloggning ej godkänns av backenden -->
+  @if (wrongInfo) {
+    <p class="errorMsg">Inkorrekt inloggningsinformation</p>
+  }
+  
+</div>
