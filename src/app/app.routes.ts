@@ -16,12 +16,12 @@ export const routes: Routes = [
         title: 'Registration site'
     }, 
     {
-        path: '', 
+        path: 'homepage', 
         component: Homepage, 
         title: 'Homepage'
     }, 
     {
-        path: 'startpage', 
+        path: '', 
         component: Startpage, 
         title: 'Startpage'
     }
