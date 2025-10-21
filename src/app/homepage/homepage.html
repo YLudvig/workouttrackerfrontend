@@ -1,1 +1,98 @@
-<p>homepage works!</p>
+<h1>Homepage</h1>
+
+<!--  Tog denna komponenten och översatta den till angular från react/ts: https://www.creative-tim.com/twcomponents/component/chat-box -->
+<!--Toggle knapp för att öppna chatten -->
+<div class="fixed bottom-[10vh] right-0 mb-4 mr-4">
+  <button
+    (click)="toggleChat()"
+    class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300 flex items-center"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="w-6 h-6 mr-2"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+      ></path>
+    </svg>
+    Chatta med vår Robo-Arnold
+  </button>
+</div>
+
+<!-- Renderas om chatten är öppen -->
+@if (isChatOpen){
+<div class="fixed bottom-[11vh] right-4 w-96">
+  <div class="bg-white shadow-md rounded-lg max-w-lg w-full">
+    <div class="p-4 border-b bg-blue-500 text-white rounded-t-lg flex justify-between items-center">
+      <p class="text-lg font-semibold">Robo Arnold</p>
+      <button
+        (click)="toggleChat()"
+        class="text-gray-300 hover:text-gray-400 focus:outline-none focus:text-gray-400"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-6 h-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Chattboxen med prompts och svar -->
+    <!-- Finns häri css logik som gör att text man skickar (från user) placera till höger och bottens till 
+    vänster och texten stylas också baserad på om man skickar eller mottar det -->
+    <div class="p-4 h-80 overflow-y-auto">
+      @for(msg of messages; track msg){
+      <div
+        class="mb-2"
+        [ngClass]="{
+          'text-right ml-12': msg.from === 'user',
+          'mr-12': msg.from === 'bot'
+        }"
+      >
+        <p
+          [ngClass]="{
+            'bg-blue-500 text-white': msg.from === 'user',
+            'bg-gray-200 text-gray-700': msg.from === 'bot'
+          }"
+          class="rounded-lg py-2 px-4 inline-block"
+        >
+          {{ msg.text }}
+        </p>
+      </div>
+      }
+    </div>
+
+    <!-- Fångar användarinputs och skickar dem antingen när skicka knappen klickas eller när man trycker på enter -->
+    <div class="p-4 border-t flex">
+      <input
+        #userInput
+        (keyup.enter)="sendMessage(userInput)"
+        type="text"
+        placeholder="Fråga Robo Arnold om träning"
+        class="w-full px-3 py-2 border rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+      <button
+        (click)="sendMessage(userInput)"
+        class="bg-blue-500 text-white px-4 py-2 rounded-r-md hover:bg-blue-600 transition duration-300"
+      >
+        Skicka
+      </button>
+    </div>
+  </div>
+</div>
+}

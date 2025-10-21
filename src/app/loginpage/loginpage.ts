@@ -33,7 +33,7 @@ export class Loginpage {
       if (result?.data.token != null && result?.data.token != '') {
         usernameInput.value = '';
         passwordInput.value = '';
-        this.router.navigate(['/startpage']);
+        this.router.navigate(['/homepage']);
       } else {
         this.valuesNotFilled = false;
         this.wrongInfo = true; 
