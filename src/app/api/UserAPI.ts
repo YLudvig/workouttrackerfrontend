@@ -1,6 +1,21 @@
 import { environment } from "../../environments/environment";
 
 
+// Exporterar vår funktion för att registrera användare 
+export async function registerUser(username:string, email: string, password: string): Promise<{data: any}> {
+    // Backend nyttja RequestParam behöver därför skicka i form av encodeURIComponents 
+    const response = await fetch(`${environment.backendApiUrl}/auth/register?username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`, {
+        method : "POST", 
+        headers: {
+            "Content-Type": "application/json"
+        }, 
+        body: JSON.stringify({username, email, password})
+    });
+    const data = await response.json();
+    return {data};
+}
+
+
 
 // Exporterar vår funktion för att logga in användare 
 export async function loginUser(username: string, password: string): Promise<{data: any}> {
