@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router} from '@angular/router';
 import { loginUser } from '../api/UserAPI';
 
 @Component({
   selector: 'app-loginpage',
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './loginpage.html',
   styleUrl: './loginpage.css'
 })

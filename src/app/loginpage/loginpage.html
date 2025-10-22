@@ -1,29 +1,58 @@
-<div class="text-center h-screen">
-  <h2>Logga in till workouttracker</h2>
-  <div>
-    <label for="username"> Användarnamn: </label>
-    <input #username type="username" placeholder="Skriv in username" required />
-  </div>
-  
-  <div>
-    <label for="password"> Lösenord: </label>
-    <input #password type="password" placeholder="Skriv in lösenord" required />
-  </div>
-  
-  <button (click)="loginUserFunction(username, password)">
-    Logga in 
-  </button>
-  
-  <div></div>
+<div class="h-screen flex items-center justify-center">
+  <div class="w-full max-w-md text-center space-y-3 mb-50">
+    <h1 class="font-bold text-2xl">Logga in till workouttracker</h1>
+    <!-- Inspirerad av denna komponenten: https://flowbite.com/docs/forms/floating-label/ -->
+    <div class="relative z-0">
+      <input
+        #username
+        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none 
+       dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        type="username"
+        placeholder=""
+        required
+      />
+      <label
+        class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 
+        peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 
+        peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 left-0 origin-left"
+        for="username"
+      >
+        Användarnamn:
+      </label>
+    </div>
 
-  <!-- Felmeddelande ifall värden ej är korrekt ifyllda -->
-  @if (valuesNotFilled) {
-  <p class="text-red-500">Värden inkorrekta ifyllda</p>
-  }
+    <div class="relative z-0">
+      <input
+        #password
+        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none 
+        dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        type="password"
+        placeholder=""
+        required
+      />
+      <label
+        class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 
+        peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 
+        peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 left-0 origin-left"
+        for="password"
+      >
+        Lösenord:
+      </label>
+    </div>
 
-  <!-- Felmeddelande ifall inloggning ej godkänns av backenden -->
-  @if (wrongInfo) {
+    <!-- Komponent inspiration: https://preline.co/docs/buttons.html -->
+    <button class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-full border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none" (click)="loginUserFunction(username, password)">Logga in</button>
+
+    <div></div>
+
+    <!-- Felmeddelande ifall värden ej är korrekt ifyllda -->
+    @if (valuesNotFilled) {
+    <p class="text-red-500">Värden inkorrekta ifyllda</p>
+    }
+
+    <!-- Felmeddelande ifall inloggning ej godkänns av backenden -->
+    @if (wrongInfo) {
     <p class="text-red-500">Inkorrekt inloggningsinformation</p>
-  }
-  
+    }
+  </div>
 </div>
