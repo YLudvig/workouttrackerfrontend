@@ -36,12 +36,12 @@
       </label>
     </div>
 
-
     <div class="relative z-0">
       <input
         #password
         type="password"
         class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        (keyup.enter)="registerUserFunction(username, email, password)"
         placeholder=""
         required
       />
@@ -68,9 +68,19 @@
     <p class="text-red-500">Alla värden ej ifyllda</p>
     }
 
+    <!-- Felmeddelande ifall användarnman och email redan finns i backend -->
+    @if(emailInUse && usernameInUse){
+    <p class="text-red-500">Användarnamn och email används redan</p>
+    }  
+
     <!-- Felmeddelande ifall email redan finns i backend -->
-    @if (emailInUse){
+    @else if (emailInUse){
     <p class="text-red-500">Email används redan</p>
+    }
+
+    <!-- Felmeddelande ifall användarnamn redan finns i backend -->
+    @else if (usernameInUse){
+    <p class="text-red-500">Användarnamn används redan</p>
     }
 
     <!-- Framgångsmeddelande ifall allting fungerade som väntat -->
