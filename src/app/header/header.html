@@ -30,7 +30,7 @@
 
   } @if (currentRoute === '/homepage' || currentRoute === '/workout' || currentRoute ===
   '/webbshop') {
-  <div class="flex ml-[80rem] mt-8 mr-3 gap-4">
+  <div class="flex ml-[70rem] mt-8 mr-3 gap-4">
     <button
       class="font-bold bg-beige border-none rounded-[20px] cursor-pointer h-8
       {{ currentRoute === '/homepage' ? 'bg-blue 600 text-blue-500' : ''}}"
@@ -51,6 +51,13 @@
       routerLink="/webbshop"
     >
       Webbshop
+    </button>
+    <button
+      (click)="logoutFunction()"
+      class="font-bold bg-beige border-none rounded-[20px] cursor-pointer h-8"
+      routerLink="/webbshop"
+    >
+      Logga ut
     </button>
   </div>
   }
