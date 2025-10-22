@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { registerUser } from '../api/UserAPI';
 
 @Component({
   selector: 'app-registerpage',
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './registerpage.html',
   styleUrl: './registerpage.css'
 })
