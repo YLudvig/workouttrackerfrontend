@@ -3,6 +3,8 @@ import { Loginpage } from './loginpage/loginpage';
 import { Registerpage } from './registerpage/registerpage';
 import { Homepage } from './homepage/homepage';
 import { Startpage } from './startpage/startpage';
+import { Webbshop } from './webbshop/webbshop';
+import { Workout } from './workout/workout';
 
 export const routes: Routes = [
      {
@@ -24,5 +26,15 @@ export const routes: Routes = [
         path: '', 
         component: Startpage, 
         title: 'Startpage'
+    }, 
+    {
+        path: 'webbshop', 
+        component: Webbshop, 
+        title: 'Webbshop'
+    }, 
+    {
+        path: 'workout', 
+        component: Workout, 
+        title: 'Workout'
     }
 ];
