@@ -29,8 +29,9 @@ export async function loginUser(username: string, password: string): Promise<{da
     })
     const data = await response.json();
     localStorage.removeItem('token');
-    if(data.token != null && data.token != ''){
+    if(data.token != null && data.token != ''&& data.username != null && data.username != ''){
         localStorage.setItem('token', data.token);
+        localStorage.setItem('username', data.username);
     }
     return {data};
 }

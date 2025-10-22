@@ -11,6 +11,7 @@ export class Registerpage {
    // Booleans för att rendera relevant feedback för användaren 
   valuesNotFilled : boolean = false;
   emailInUse : boolean = false; 
+  usernameInUse: boolean = false; 
   successfulRegistration : boolean = false; 
 
   async registerUserFunction(usernameInput: HTMLInputElement, emailInput: HTMLInputElement, passwordInput: HTMLInputElement): Promise<void>{
@@ -23,10 +24,21 @@ export class Registerpage {
     if(username != null && username != '' && email != null && email != '' && password != null && password != ''){
       // Behöver få info om vad responsen var 
       const result = await registerUser(username, email, password);
-      if (result.data.status === 'Misslyckades'){
+      if (result.data.status === 'Misslyckades pga email och användarnamn'){
         this.successfulRegistration = false;
         this.valuesNotFilled = false; 
-        this.emailInUse = true; 
+        this.emailInUse = true;
+        this.usernameInUse = true; 
+      } else if (result.data.status === 'Misslyckades pga email'){
+        this.successfulRegistration = false;
+        this.valuesNotFilled = false; 
+        this.emailInUse = true;
+        this.usernameInUse = false;
+      } else if (result.data.status === 'Misslyckades pga användarnamn'){
+        this.successfulRegistration = false;
+        this.valuesNotFilled = false; 
+        this.emailInUse = false;
+        this.usernameInUse = true;
       } else {
         this.emailInUse = false; 
         this.valuesNotFilled = false; 
@@ -38,6 +50,7 @@ export class Registerpage {
       }
     } else {
       this.emailInUse = false; 
+      this.usernameInUse = false;
       this.successfulRegistration = false; 
       this.valuesNotFilled = true; 
     }
