@@ -18,4 +18,9 @@ export class Header {
     })
   }
 
+  logoutFunction(): void{
+    localStorage.removeItem('token');
+    this.router.navigate(['/']);
+  }
+
 }
