@@ -1,41 +1,81 @@
-<div class="text-center h-screen">
-  <h2>Registrera dig för workouttracker</h2>
+<div class="h-screen flex items-center justify-center">
+  <div class="w-full max-w-md text-center space-y-3 mb-50">
+    <h1 class="font-bold text-2xl">Registrera dig för workouttracker</h1>
 
-  <div>
-    <label for="username"> Användarnamn: </label>
-    <input #username placeholder="Skriv in användarnamn" required />
-  </div>
+    <!-- Inspirerad av denna komponenten: https://flowbite.com/docs/forms/floating-label/ -->
 
-  <div>
-    <label for="email"> Email: </label>
-    <input #email type="email" placeholder="Skriv in email" required />
-  </div>
+    <div class="relative z-0">
+      <input
+        #email
+        type="email"
+        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        placeholder=""
+        required
+      />
+      <label
+        class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 left-0 origin-left"
+        for="email"
+      >
+        Email:
+      </label>
+    </div>
 
-  <div>
-    <label for="password"> Lösenord: </label>
-    <input #password type="password" placeholder="Skriv in lösenord" required />
-  </div>
+    <div class="relative z-0">
+      <input
+        #username
+        type="username"
+        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        placeholder=""
+        required
+      />
+      <label
+        class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 left-0 origin-left"
+        for="username"
+      >
+        Användarnamn:
+      </label>
+    </div>
 
-  <button (click)="registerUserFunction(username, email, password)">
-    Registrera dig
-  </button>
 
-  <div></div>
+    <div class="relative z-0">
+      <input
+        #password
+        type="password"
+        class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+        placeholder=""
+        required
+      />
+      <label
+        class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 left-0 origin-left"
+        for="password"
+      >
+        Lösenord:
+      </label>
+    </div>
 
-  <!-- Felmeddelande ifall värden ej korrekt ifyllda  -->
-  @if (valuesNotFilled) {
-  <p class="text-red-500">Alla värden ej ifyllda</p>
-  }
+    <!-- Komponent inspiration: https://preline.co/docs/buttons.html -->
+    <button
+      class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-full border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-hidden focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+      (click)="registerUserFunction(username, email, password)"
+    >
+      Registrera dig
+    </button>
 
-  <!-- Felmeddelande ifall email redan finns i backend -->
-  @if (emailInUse){
+    <div></div>
+
+    <!-- Felmeddelande ifall värden ej korrekt ifyllda  -->
+    @if (valuesNotFilled) {
+    <p class="text-red-500">Alla värden ej ifyllda</p>
+    }
+
+    <!-- Felmeddelande ifall email redan finns i backend -->
+    @if (emailInUse){
     <p class="text-red-500">Email används redan</p>
-  }
+    }
 
-  <!-- Framgångsmeddelande ifall allting fungerade som väntat -->
-  @if (successfulRegistration){
+    <!-- Framgångsmeddelande ifall allting fungerade som väntat -->
+    @if (successfulRegistration){
     <p class="text-green-500">Lyckad registrering</p>
-  }
-
-
+    }
+  </div>
 </div>
