@@ -2,7 +2,7 @@ import { environment } from "../../environments/environment";
 
 const token = localStorage.getItem("token");
 
-// Exporterar vår funktion för att skicka prompts till chatbotten 
+// Exporterar vår funktion för att skicka användare till stripe för att köpa ösnakde program
 export async function buyStripeItem(priceId:string): Promise<any> {
     const response = await fetch(`${environment.backendApiUrl}/stripe/create-checkout-session`, {
         method : "POST", 
