@@ -20,6 +20,7 @@ export class Header {
 
   logoutFunction(): void{
     localStorage.removeItem('token');
+    localStorage.removeItem('username');
     this.router.navigate(['/']);
   }
 
