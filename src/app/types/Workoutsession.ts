@@ -13,3 +13,10 @@ export interface WorkoutSession {
     exercises: Exercise[];
     participantsIds: number[];
 }
+
+export interface WorkoutTemplate {
+    workoutTemplateId?: number; 
+    userId : number; 
+    templateName: string; 
+    exercises: Exercise[];
+}

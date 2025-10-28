@@ -3,6 +3,8 @@ import { RouterLink } from '@angular/router';
 import {FormsModule} from '@angular/forms'
 import { chatBotCall } from '../api/ChatbotAPI';
 import { CommonModule } from '@angular/common';
+import { createTemplate } from '../api/WorkoutAPI';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-homepage',
@@ -13,7 +15,6 @@ import { CommonModule } from '@angular/common';
 export class Homepage {
 
   //Tog denna komponenten och översatta den till angular från react/ts: https://www.creative-tim.com/twcomponents/component/chat-box 
-
   // Boolean som vi användar för att antingen öppna eller stänga vår chat 
   isChatOpen = true; 
   userInput = '';
@@ -47,5 +48,66 @@ export class Homepage {
   }
 
  
+  // Sätter defaultvärden för det som sedan kommer skickas in för att skapa templates 
+  userId = localStorage.getItem('user');
+  templateName = '';
+  // Denna nedan gör så att det automatiskt finns en rad i varje workouttemplate
+  exercises = [
+    {exerciseName: '', weight: 0, completed: false}
+  ]
+
+  templateErrorMsg = ''; 
+
+
+  // Metod för att lägga till en övning i träningspasstemplatet 
+  addExercise() {
+    this.exercises.push({exerciseName: '', weight: 0, completed: false})
+  }
+
+  // Metod för att ta bort en övning 
+  removeExercise(index: number){
+    if(this.exercises.length != 1){
+      this.exercises.splice(index, 1);
+    }
+  }
+
+  // Metod för att skicka iväg template till backend och skapa i databasen 
+  async submitTemplate(){
+    this.templateErrorMsg = '';
+
+    // Felhantering ifall man inte fyllt i namn för träningspasset 
+    if (!this.templateName.trim()){
+      this.templateErrorMsg = 'Du har inte anget namn för ditt träningspass'
+      return; 
+    }
+
+    // Felhantering för ifall några av övningarna inte är korrekt ifyllda 
+    const invalid = this.exercises.some(
+      (ex) => ! ex.exerciseName.trim() || ex.weight <= 0
+    ); 
+    if (invalid){
+      this.templateErrorMsg = 'Vissa av övningarna var inte korrekt ifyllda, kontroller igen'
+      return; 
+    }
+
+    const workoutTemplate = {
+      userId : this.userId ? Number(this.userId) : 1, 
+      templateName: this.templateName, 
+      exercises: this.exercises
+    };
+
+    try {
+      // Submittar och sedan så nollställs inputs så att man fritt kan skapa andra träningspass
+      const response = await createTemplate(workoutTemplate);
+      console.log(response);
+      alert('Ditt träningspass skapades');
+      this.templateName = ''; 
+      this.exercises = [{exerciseName: '', weight: 0, completed: false}]; 
+    } catch (err){
+      console.error(err);
+    }
+
+  }
+
 
 }
