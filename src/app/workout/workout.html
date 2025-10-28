@@ -1,3 +1,11 @@
 <p>workout works!</p>
 
 <button (click)="startSession()">Start workout</button>
+
+@if(session != null){
+    <div>
+        <h3>Träningspass: {{session.templateName}}</h3>
+        <p>SessionsId för att joina träningspasset: {{session.sessionId}}</p>
+        <p>Antal deltagare i träningspasset just nu: {{session.participantsIds.length}}</p>
+    </div>
+}
