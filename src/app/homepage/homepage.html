@@ -4,6 +4,16 @@
   <h2 class="">Går ni in i workout tabben så kan man köra sina träningspass. Träningspassen kan köras själv eller med en eller flera vänner.</h2>
   <h2 class="">Går ni in i webbshoppen så finns det träningsprogram att köpa, annars kan ni skapa egna om ni hellre gör det. (Mockat betalningsintegration)</h2>
 
+  @if(templateList != null){
+    <h2 class="mt-6 mb-2 font-semibold">Existerande workouts:</h2>
+  }
+
+  @for (template of templateList; track $index){
+    <div class="mb-3">
+      <li>{{template.templateName}}</li>
+    </div>
+  }
+
   <br>
   <h1 class="font-bold text-2xl mb-4">Skapa träningspass:</h1>
 

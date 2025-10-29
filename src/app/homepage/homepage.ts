@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import {FormsModule} from '@angular/forms'
 import { chatBotCall } from '../api/ChatbotAPI';
 import { CommonModule } from '@angular/common';
-import { createTemplate, getAllTemplates } from '../api/WorkoutAPI';
-import { HttpClient } from '@angular/common/http';
+import { createTemplate} from '../api/WorkoutAPI';
 import { TemplateService } from '../service/TemplateService';
+import { WorkoutTemplate } from '../types/Workoutsession';
 
 @Component({
   selector: 'app-homepage',
@@ -112,10 +111,12 @@ export class Homepage {
 
   constructor(private templateService: TemplateService) {};
 
+  templateList: WorkoutTemplate[] = [];
+
   // Hämtar lista över användarens träningspass när de går in på sidan/loggar in 
   async ngOnInit(){
-    const templateList = await this.templateService.fetchTemplates();
-    console.log(templateList);
+    this.templateList = await this.templateService.fetchTemplates();
+    console.log(this.templateList);
   }
 
 
