@@ -17,3 +17,16 @@ export async function createTemplate(workoutTemplate: WorkoutTemplate): Promise<
     const data = await response.text();
     return {data};
 }
+
+// Exporterar vår funktion för att skapa workouttemplate 
+export async function getAllTemplates(userId : number): Promise<WorkoutTemplate[]> {
+    const response = await fetch(`${environment.backendApiUrl}/template/getTemplates?userId=${userId}`, {
+        method : "GET", 
+        headers: {
+            "Content-Type": "application/json", 
+            'Authorization': `Bearer ${token}`
+        }, 
+    });
+    const result =  await response.json();
+    return result; 
+}

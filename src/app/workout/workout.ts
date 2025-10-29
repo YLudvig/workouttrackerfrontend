@@ -1,6 +1,7 @@
 import { Component, NgZone } from '@angular/core';
 import { WorkoutWS } from '../websocket';
 import { WorkoutSession } from '../types/Workoutsession';
+import { TemplateService } from '../service/TemplateService';
 
 @Component({
   selector: 'app-workout',
@@ -16,10 +17,13 @@ export class Workout {
   // Session
   session : WorkoutSession | null = null; 
 
-  constructor(private wsService: WorkoutWS, private ngZone: NgZone) {};
+  constructor(private wsService: WorkoutWS, private ngZone: NgZone, private templateService : TemplateService) {};
 
   // När går in på sidan subscribear till WS
-  ngOnInit(){
+  async ngOnInit(){
+
+    const templateList = await this.templateService.getTemplateList();
+    console.log(templateList);
 
     this.wsService.connect((frame) => {
 
@@ -70,5 +74,6 @@ export class Workout {
   ngOnDestroy() {
     this.wsService.disconnect();
   }
+
 
 }
