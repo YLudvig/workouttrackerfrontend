@@ -28,7 +28,6 @@ export class Loginpage {
     const password = passwordInput.value;
 
     if(username != null && username != '' && password != null && password != ''){
-      localStorage.removeItem('token');
       const result = await loginUser(username, password);
       if (result?.data.token != null && result?.data.token != '') {
         usernameInput.value = '';

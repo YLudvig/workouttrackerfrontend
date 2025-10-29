@@ -1,11 +1,11 @@
 import { environment } from "../../environments/environment";
 import { WorkoutList, WorkoutRequest } from "../types/Workoutsession";
 
-const token = localStorage.getItem("token");
 
 
 // Exporterar vår funktion för att skapa workout
 export async function createWorkout(workout: WorkoutRequest): Promise<{data: string}> {
+    const token = localStorage.getItem("token");
     const response = await fetch(`${environment.backendApiUrl}/workout/createWorkout`, {
         method : "POST", 
         headers: {
@@ -20,6 +20,7 @@ export async function createWorkout(workout: WorkoutRequest): Promise<{data: str
 
 // Exporterar vår funktion för att hämta workouts
 export async function getAllWorkouts(userId : number): Promise<WorkoutList[]> {
+    const token = localStorage.getItem("token");
     const response = await fetch(`${environment.backendApiUrl}/workout/getUsersWorkouts?userId=${userId}`, {
         method : "GET", 
         headers: {

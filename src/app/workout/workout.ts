@@ -1,4 +1,4 @@
-import { Component, NgZone } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { WorkoutWS } from '../websocket';
 import { WorkoutList, WorkoutSession } from '../types/Workoutsession';
 import { WorkoutService } from '../service/WorkoutService';
@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './workout.html',
   styleUrl: './workout.css',
 })
-export class Workout {
+export class Workout implements OnInit{
   // Trackar connceted så man inte kan göra requests innan det då det pajar flödet
   connected = false;
 
