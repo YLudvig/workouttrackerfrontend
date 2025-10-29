@@ -1,9 +1,12 @@
 import { environment } from "../../environments/environment";
 
 const token = localStorage.getItem("token");
+const userId = localStorage.getItem('userId');
 
 // Exporterar vår funktion för att skicka användare till stripe för att köpa ösnakde program
 export async function buyStripeItem(priceId:string): Promise<any> {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem('userId');
     const response = await fetch(`${environment.backendApiUrl}/stripe/create-checkout-session`, {
         method : "POST", 
         headers: {
@@ -11,7 +14,10 @@ export async function buyStripeItem(priceId:string): Promise<any> {
             'Authorization': `Bearer ${token}`
         }, 
         body: JSON.stringify(
-            {priceId : priceId}
+            {
+                priceId : priceId, 
+                userId: userId
+            }
         )
     });
 

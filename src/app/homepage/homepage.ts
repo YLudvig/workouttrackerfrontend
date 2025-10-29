@@ -15,7 +15,7 @@ import { WorkoutList, WorkoutRequest } from '../types/Workoutsession';
 export class Homepage implements OnInit{
   //Tog denna komponenten och översatta den till angular från react/ts: https://www.creative-tim.com/twcomponents/component/chat-box
   // Boolean som vi användar för att antingen öppna eller stänga vår chat
-  isChatOpen = true;
+  isChatOpen = false;
   userInput = '';
 
   // Lista av meddelanden, behöver separera botmeddelanden från promptsen så vi kan bestämma om det ska visas som skickats från en själv eller till en
