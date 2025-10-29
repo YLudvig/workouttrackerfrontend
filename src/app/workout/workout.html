@@ -4,7 +4,7 @@
 
 @if(session != null){
     <div>
-        <h3>Träningspass: {{session.templateName}}</h3>
+        <h3>Träningspass: {{session.workoutName}}</h3>
         <p>SessionsId för att joina träningspasset: {{session.sessionId}}</p>
         <p>Antal deltagare i träningspasset just nu: {{session.participantsIds.length}}</p>
         @for (exercise of session.exercises; track $index) {
