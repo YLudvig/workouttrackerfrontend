@@ -124,11 +124,13 @@ export class Homepage implements OnInit{
 
   constructor(private workoutService: WorkoutService) {}
 
+  
+  
   workoutList: WorkoutList[] = [];
-
+  
   // Boolean för om man laddar, med denna så kan vi conditionally rendera saker så att vi inte får problem med desync mellan routing och fetchhastighet 
   isLoading = true; 
-
+  
   // Hämtar lista över användarens träningspass när de går in på sidan/loggar in
   // Behöver felhantering så att det inte blir problem med att routing är snabbare än vad fetches är 
   async ngOnInit() {
@@ -141,7 +143,8 @@ export class Homepage implements OnInit{
       this.isLoading = false; 
     }
   }
-
+  
+  selectedWorkoutId: number | null = null; 
   tableIndex: number | null = null;
 
   // Toggle så att användaren kan visa mer om ett träningspass eller visa mindre
