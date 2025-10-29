@@ -1,9 +1,78 @@
 <div class="justify-center text-center mt-15">
-    <h1 class="font-bold">Välkommen till Workouttracker</h1>
-    <h2 class="">På denna sidan så har ni tillgång till våran chatbot som kan hjälpa er med träningsfrågor och tips, här kan ni även skapa träningspass. </h2>
-    <h2 class="">Går ni in i workout tabben så kan man köra sina träningspass. Träningspassen kan köras själv eller med en eller flera vänner.</h2>
-    <h2 class="">Går ni in i webbshoppen så finns det träningsprogram att köpa, annars kan ni skapa egna om ni hellre gör det. (Mockat betalningsintegration)</h2>
+  <h1 class="font-bold">Välkommen till Workouttracker</h1>
+  <h2 class="">På denna sidan så har ni tillgång till våran chatbot som kan hjälpa er med träningsfrågor och tips, här kan ni även skapa träningspass. </h2>
+  <h2 class="">Går ni in i workout tabben så kan man köra sina träningspass. Träningspassen kan köras själv eller med en eller flera vänner.</h2>
+  <h2 class="">Går ni in i webbshoppen så finns det träningsprogram att köpa, annars kan ni skapa egna om ni hellre gör det. (Mockat betalningsintegration)</h2>
+
+  @if(workoutList != null){
+    <h2 class="mt-6 mb-2 font-semibold">Existerande workouts:</h2>
+  }
+
+  <div class="max-w-md mx-auto text-left">
+    @for (workoutItem of workoutList; track $index){
+      <div class="mb-4 border-b border-gray-200 pb-2">
+        <li class="flex justify-between items-center">
+          {{workoutItem.workout.workoutName}}
+          <button class="text-blue-600 hover:underline" type="button" (click)="toggleTable($index)">
+            {{tableIndex === $index ? 'Visa mindre' : 'Visa mer'}}
+          </button>
+        </li>
+  
+        @if (tableIndex === $index){
+          <table class="w-full mt-2 text-sm border">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="text-left p-2 border-b">Övning</th>
+                <th class="text-left p-2 border-b">Vikt</th>
+              </tr>
+            </thead>
+            @for (exercise of workoutItem.exercises; track $index) {
+              <tbody>
+                <tr>
+                  <td class="p-2 border-b">{{exercise.exerciseName}}</td>
+                  <td class="p-2 border-b">{{exercise.weight}}</td>
+                </tr>
+              </tbody>
+            }
+          </table>
+        }
+  
+      </div>
+    }
+  </div>
+
+  <br>
+  <h1 class="font-bold text-2xl mb-4">Skapa träningspass:</h1>
+
+  <br>
+  <label class="block font-semibold mb-2">Namn på träningspasset:</label>
+  <input [(ngModel)]="workoutName" placeholder="t.ex. Push dag" class="border border-gray-400 rounded-md px-3 py-2 outline outline-1 outline-blue-400 focus:outline-2 focus:outline-blue-600">
+  <br>
+
+  <h3 class="mt-6 mb-2 font-semibold">Övningar:</h3>
+  @for (exercise of exercises; track $index) {
+    <div class="mb-3">
+      <input [(ngModel)]="exercise.exerciseName" placeholder="Bänkpress" class="border border-gray-400 rounded-md px-3 py-1 outline outline-1 outline-blue-400 focus:outline-2 focus:outline-blue-600">
+      <input [(ngModel)]="exercise.weight" type="number" placeholder="60" class="border border-gray-400 rounded-md px-3 py-1 outline outline-1 outline-blue-400 focus:outline-2 focus:outline-blue-600">
+      <button type="button" (click)="removeExercise($index)" class="ml-2 px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition">X</button>
+      <br>
+    </div>
+  }
+
+  <br>
+  <button type="button" (click)="addExercise()" class="mt-2 mb-4 px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 outline outline-1 outline-green-400">Lägg till en övning i träningspasset</button>
+  <br>
+  <button type="button" (click)="submitWorkout()" class="mt-2 mb-4 px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 outline outline-1 outline-green-400">Skapa träningspasset</button>
+
+  @if (workoutErrorMsg) {
+    <p class="text-red-600 font-semibold mt-3">
+      {{workoutErrorMsg}}
+    </p>
+  }
+
 </div>
+
+
 
 <!--  Tog denna komponenten och översatta den till angular från react/ts: https://www.creative-tim.com/twcomponents/component/chat-box -->
 <!--Toggle knapp för att öppna chatten -->
