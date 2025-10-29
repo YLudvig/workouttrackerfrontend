@@ -1,8 +1,17 @@
-<p>webbshop works!</p>
+<div class="flex flex-col md:flex-row gap-4 mt-6 justify-center">
 
-
-<button (click)="stripePurchase('price_1SLgj7H45j46nWqxtf1O7bWJ')">KÖP PPL PROGRAM NU! </button>
-
-<div></div>
-
-<button (click)="stripePurchase('price_1SLkUFH45j46nWqx0myyaJAo')">KÖP ARNOLD SPLIT PROGRAM NU!</button>
+    <div class="flex flex-col items-center">
+        <img src="assets/Bench-Press.jpg" alt="Push Program" class="w-120 h-60 object-cover mb-2">
+        <button (click)="stripePurchase('price_1SLgj7H45j46nWqxtf1O7bWJ')" 
+        class="mt-2 mb-4 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 outline outline-1 outline-blue-400"
+        >KÖP PREMIUM PUSH PROGRAM NU! </button>
+    </div>
+    
+    <br>
+    <div class="flex flex-col items-center">
+        <img src="assets/pullups.jpeg" alt="Pull Program" class="w-120 h-60 object-cover mb-2">
+        <button (click)="stripePurchase('price_1SLkUFH45j46nWqx0myyaJAo')" 
+        class="mt-2 mb-4 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 outline outline-1 outline-blue-400"
+        >KÖP PREMIUM PULL PROGRAM NU!</button>
+    </div>
+</div>
