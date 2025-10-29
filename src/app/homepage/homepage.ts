@@ -119,5 +119,12 @@ export class Homepage {
     console.log(this.templateList);
   }
 
+  tableIndex: number | null = null; 
+
+  // Toggle så att användaren kan visa mer om ett träningspass eller visa mindre
+  toggleTable(index: number){
+    this.tableIndex = this.tableIndex === index ? null : index; 
+  }
+
 
 }
