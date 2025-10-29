@@ -1,6 +1,18 @@
-<p>workout works!</p>
 
-<button (click)="startSession()">Start workout</button>
+<label for="selectWorkout">Välj träningspass:</label>
+<select 
+    id="selectWorkout"
+    [(ngModel)]="selectedWorkoutId"
+    aria-label="Välj träningspass"
+>
+@for (workout of workoutList; track $index) {
+    <option [value]="workout.workout.workoutName">
+        {{workout.workout.workoutName}}
+    </option>
+}
+</select>
+
+<button (click)="startSession()">Starta träningspass</button>
 
 @if(session != null){
     <div>
