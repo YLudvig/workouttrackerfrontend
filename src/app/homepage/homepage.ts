@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { chatBotCall } from '../api/ChatbotAPI';
 import { CommonModule } from '@angular/common';
@@ -12,7 +12,7 @@ import { WorkoutList, WorkoutRequest } from '../types/Workoutsession';
   templateUrl: './homepage.html',
   styleUrl: './homepage.css',
 })
-export class Homepage {
+export class Homepage implements OnInit{
   //Tog denna komponenten och översatta den till angular från react/ts: https://www.creative-tim.com/twcomponents/component/chat-box
   // Boolean som vi användar för att antingen öppna eller stänga vår chat
   isChatOpen = true;
@@ -92,11 +92,31 @@ export class Homepage {
 
     try {
       // Submittar och sedan så nollställs inputs så att man fritt kan skapa andra träningspass
-      const response = await createWorkout(workoutToSend);
-      console.log(response);
-      alert('Ditt träningspass skapades');
+      await createWorkout(workoutToSend);
+
+
+      // Pushar lokalt för att undvika att behöva refetcha då det skapade desync problem, nu så skickas den till backend samtidigt som den läggs till på lokal listan därmed så 
+      // uppdateras det omedelbart utan att behöva refetcha, refetches sker senare naturligt och overridear då med den riktiga datan över den
+      this.workoutList.push({
+        workout: {
+          workoutId: 0,
+          workoutName: this.workoutName,
+          userId: Number(this.userId),  
+          completed: false, 
+          completedAt: "fake"}, 
+        exercises: this.exercises.map(ex => ({
+          exerciseId: 0, 
+          exerciseName: ex.exerciseName, 
+          weight: ex.weight, 
+          completed: ex.completed
+      }))
+      })
+
+      console.log(this.workoutList);
+
       this.workoutName = '';
       this.exercises = [{ exerciseName: '', weight: 0, completed: false }];
+      alert('Ditt träningspass skapades');
     } catch (err) {
       console.error(err);
     }
@@ -104,14 +124,27 @@ export class Homepage {
 
   constructor(private workoutService: WorkoutService) {}
 
+  
+  
   workoutList: WorkoutList[] = [];
-
+  
+  // Boolean för om man laddar, med denna så kan vi conditionally rendera saker så att vi inte får problem med desync mellan routing och fetchhastighet 
+  isLoading = true; 
+  
   // Hämtar lista över användarens träningspass när de går in på sidan/loggar in
+  // Behöver felhantering så att det inte blir problem med att routing är snabbare än vad fetches är 
   async ngOnInit() {
-    this.workoutList = await this.workoutService.fetchWorkouts();
-    console.log(this.workoutList);
+    try {
+      this.workoutList = await this.workoutService.fetchWorkouts();
+      console.log(this.workoutList);
+    } catch (err){
+      console.error('Fetch misslyckades', err);
+    } finally {
+      this.isLoading = false; 
+    }
   }
-
+  
+  selectedWorkoutId: number | null = null; 
   tableIndex: number | null = null;
 
   // Toggle så att användaren kan visa mer om ett träningspass eller visa mindre

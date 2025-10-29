@@ -1,17 +1,21 @@
-import { Component, NgZone } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { WorkoutWS } from '../websocket';
-import { WorkoutSession } from '../types/Workoutsession';
+import { WorkoutList, WorkoutSession } from '../types/Workoutsession';
 import { WorkoutService } from '../service/WorkoutService';
+import { FormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-workout',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './workout.html',
   styleUrl: './workout.css',
 })
-export class Workout {
+export class Workout implements OnInit{
   // Trackar connceted så man inte kan göra requests innan det då det pajar flödet
   connected = false;
+
+  workoutList : WorkoutList [] = [];
 
   // Session
   session: WorkoutSession | null = null;
@@ -24,8 +28,8 @@ export class Workout {
 
   // När går in på sidan subscribear till WS
   async ngOnInit() {
-    const templateList = await this.workoutService.getWorkoutList();
-    console.log(templateList);
+    this.workoutList = await this.workoutService.getWorkoutList();
+    console.log(this.workoutList);
 
     this.wsService.connect((frame) => {
       console.log('Client STOMP session id', this.wsService.client);
@@ -75,4 +79,9 @@ export class Workout {
   ngOnDestroy() {
     this.wsService.disconnect();
   }
+
+  // Trackar vilket träningspass som är valt för att 
+  selectedWorkoutId: number | null = null; 
+
+
 }
