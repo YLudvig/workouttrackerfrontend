@@ -71,6 +71,8 @@ export class Workout implements OnInit, OnDestroy{
         this.currentSessionCode = response.sessionCode;
         this.addMessage(`Session skapad med koden: ${response.sessionCode}`); 
       })
+
+      this.ws.subscribeToSession(response.sessionCode, (e) => this.handleEvent(e));
     })
 
 
@@ -92,6 +94,7 @@ export class Workout implements OnInit, OnDestroy{
 
     this.currentSessionCode = request.sessionCode; 
     this.ws.subscribeToSession(request.sessionCode, (sessionEvent: SessionEvent) => this.handleEvent(sessionEvent)); 
+    this.joinCode = ''; 
     this.addMessage(`Sessionen du är subscribad till: ${request.sessionCode}`)
   }
 
@@ -149,6 +152,10 @@ export class Workout implements OnInit, OnDestroy{
         this.currentSessionCode = sessionEvent.sessionCode; 
         this.ws.subscribeToSession(sessionEvent.sessionCode, (e) => this.handleEvent(e));
       }
+    }
+
+    if (type === 'SESSION_SYNC') {
+      this.addMessage(`[${type}] synkade deltagare: ${participants}`)
     }
 
     if (type === 'SESSION_ENDED') {
