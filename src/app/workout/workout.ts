@@ -1,6 +1,6 @@
 import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { WorkoutWS } from '../websocket';
-import { WorkoutList, WorkoutSession } from '../types/Workoutsession';
+import { Exercise, WorkoutList, WorkoutSession } from '../types/Workoutsession';
 import { WorkoutService } from '../service/WorkoutService';
 import { FormsModule } from '@angular/forms';
 import { CreateSessionRequest, JoinSessionRequest, SessionEvent } from '../types/WSTypes';
@@ -75,7 +75,6 @@ export class Workout implements OnInit, OnDestroy{
       this.ws.subscribeToSession(response.sessionCode, (e) => this.handleEvent(e));
     })
 
-
   }
 
   // Metod för att joina en session 
@@ -110,15 +109,6 @@ export class Workout implements OnInit, OnDestroy{
   }
 
 
-  onSendUpdate(): void {
-    if (!this.currentSessionCode){
-      this.addMessage('Kan inte skicka uppdateringar då du inte är i en session');
-      return; 
-    }
-    this.ws.sendUpdate(this.currentSessionCode, Number(localStorage.getItem('userId')), { button: 'test', time: Date.now()})
-    this.addMessage('Uppdatering skickad'); 
-  }
-
   onEndSession(): void {
     const code = this.createdSessionCode || this.currentSessionCode; 
     if (!code){
@@ -138,10 +128,21 @@ export class Workout implements OnInit, OnDestroy{
   private handleEvent(sessionEvent : SessionEvent): void {
     const type = sessionEvent.event || 'UNKNOWN'; 
     const actor = sessionEvent.actorUserId ?? 'unknwon actor'; 
-    const state = sessionEvent.payload?.sessionState ?? ''; 
-    const participants = Array.isArray(sessionEvent.payload?.participants) ? sessionEvent.payload!.participants.join(',') : ''; 
+    const sessionState = sessionEvent.payload?.sessionState ?? ''; 
+    const payload = sessionEvent.payload || {}; 
 
-    this.addMessage(`[${type}] actor:${actor} state:${state} participants:${participants}`)    
+    const participants : number[] = Array.isArray(payload?.participants) ? payload!.participants: []; 
+    const exercises : Exercise[] = Array.isArray(payload.exercises) ? payload.exercises : [];
+    const workout = payload.workout || null; 
+
+    this.addMessage(`[${type}] actor:${actor} state:${sessionState} participants:${participants}`); 
+    
+    if (!this.session) this.session = { sessionCode : sessionEvent.sessionCode, participantsIds : participants, exercises, workout, sessionState}; 
+
+    this.session!.participantsIds = participants; 
+    this.session!.exercises = exercises; 
+    this.session!.workout = workout; 
+    this.session!.sessionState = sessionState;
 
     if (type === 'SESSION_CREATED' && actor === Number(localStorage.getItem('userId'))){
       this.createdSessionCode = sessionEvent.sessionCode; 
@@ -150,6 +151,7 @@ export class Workout implements OnInit, OnDestroy{
       // Säkerställer att host är subscribad till topic 
       if (!this.currentSessionCode) {
         this.currentSessionCode = sessionEvent.sessionCode; 
+        this.currentSessionCode = sessionEvent.sessionCode;
         this.ws.subscribeToSession(sessionEvent.sessionCode, (e) => this.handleEvent(e));
       }
     }
@@ -165,6 +167,17 @@ export class Workout implements OnInit, OnDestroy{
       }
       this.addMessage('Session avslutad, unsubscribear från topic');
     }
+
+  }
+
+  markExerciseCompleted(exerciseId: number){
+    if (!this.currentSessionCode){
+      this.addMessage('Du ärinte i en session');
+      return; 
+    }
+
+    this.ws.sendUpdate(this.currentSessionCode, Number(localStorage.getItem('userId')), {exerciseId}); 
+    this.addMessage(`Övning ${exerciseId} markerad som klar`); 
 
   }
 

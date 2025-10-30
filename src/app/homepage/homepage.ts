@@ -20,6 +20,21 @@ export class Homepage implements OnInit{
 
   // Lista av meddelanden, behöver separera botmeddelanden från promptsen så vi kan bestämma om det ska visas som skickats från en själv eller till en
   messages: { text: string; from: 'user' | 'bot' }[] = [];
+  
+  constructor(private workoutService: WorkoutService) {}
+
+  workoutList: WorkoutList[] = [];  
+
+  // Boolean för om man laddar, med denna så kan vi conditionally rendera saker så att vi inte får problem med desync mellan routing och fetchhastighet 
+  isLoading = true; 
+  
+  // Sätter defaultvärden för det som sedan kommer skickas in för att skapa workouts
+  userId = localStorage.getItem('user');
+  workoutName = '';
+  // Denna nedan gör så att det automatiskt finns en rad i varje workout
+  exercises = [{ exerciseName: '', weight: 0, completed: false }];
+
+  workoutErrorMsg = '';
 
   // Öppnar eller stänger chatten beroende på vilket som var det tidigare läget
   toggleChat() {
@@ -45,14 +60,6 @@ export class Homepage implements OnInit{
       this.messages.push({ text: result.data, from: 'bot' });
     });
   }
-
-  // Sätter defaultvärden för det som sedan kommer skickas in för att skapa workouts
-  userId = localStorage.getItem('user');
-  workoutName = '';
-  // Denna nedan gör så att det automatiskt finns en rad i varje workout
-  exercises = [{ exerciseName: '', weight: 0, completed: false }];
-
-  workoutErrorMsg = '';
 
   // Metod för att lägga till en övning i träningspasstemplatet
   addExercise() {
@@ -84,7 +91,7 @@ export class Homepage implements OnInit{
     }
 
     const workoutToSend: WorkoutRequest = {
-      userId: this.userId ? Number(this.userId) : 1,
+      userId: Number(localStorage.getItem('userId')),
       workoutName: this.workoutName,
       completed: false, 
       exercises: this.exercises,
@@ -94,42 +101,16 @@ export class Homepage implements OnInit{
       // Submittar och sedan så nollställs inputs så att man fritt kan skapa andra träningspass
       await createWorkout(workoutToSend);
 
-
-      // Pushar lokalt för att undvika att behöva refetcha då det skapade desync problem, nu så skickas den till backend samtidigt som den läggs till på lokal listan därmed så 
-      // uppdateras det omedelbart utan att behöva refetcha, refetches sker senare naturligt och overridear då med den riktiga datan över den
-      this.workoutList.push({
-        workout: {
-          workoutId: 0,
-          workoutName: this.workoutName,
-          userId: Number(this.userId),  
-          completed: false, 
-          completedAt: "fake"}, 
-        exercises: this.exercises.map(ex => ({
-          exerciseId: 0, 
-          exerciseName: ex.exerciseName, 
-          weight: ex.weight, 
-          completed: ex.completed
-      }))
-      })
+      this.workoutList = await this.workoutService.fetchWorkouts();
 
       console.log(this.workoutList);
 
       this.workoutName = '';
       this.exercises = [{ exerciseName: '', weight: 0, completed: false }];
-      alert('Ditt träningspass skapades');
     } catch (err) {
       console.error(err);
     }
   }
-
-  constructor(private workoutService: WorkoutService) {}
-
-  
-  
-  workoutList: WorkoutList[] = [];
-  
-  // Boolean för om man laddar, med denna så kan vi conditionally rendera saker så att vi inte får problem med desync mellan routing och fetchhastighet 
-  isLoading = true; 
   
   // Hämtar lista över användarens träningspass när de går in på sidan/loggar in
   // Behöver felhantering så att det inte blir problem med att routing är snabbare än vad fetches är 

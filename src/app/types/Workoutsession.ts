@@ -8,11 +8,13 @@ export interface Exercise {
 }
 
 export interface WorkoutSession {
-    sessionId: string; 
-    workoutId: number; 
-    workoutName: string; 
+    sessionCode: string; 
+    workoutId?: number; 
+    workoutName?: string; 
     exercises: Exercise[];
     participantsIds: number[];
+    workout?: Workout | null; 
+    sessionState?: string; 
 }
 
 export interface Workout {
