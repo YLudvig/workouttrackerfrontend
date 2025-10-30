@@ -6,10 +6,10 @@ import { WorkoutSession } from "./types/Workoutsession";
 import { CreateSessionRequest, JoinSessionRequest, SessionEvent } from "./types/WSTypes";
 
 
+// Min websocket lösning konstruerades genom att titta på övningar och tidigare projekt
+// Och även bl.a. https://medium.com/%40dashingmee50/build-a-real-time-chat-app-with-spring-boot-websockets-stomp-sockjs-from-zero-to-production-3a0173692f38 för att bättre fatta kopplingen mellan olika delar 
 @Injectable({providedIn: 'root'})
 export class WorkoutWS{
-
-
 
 
     private client: Client | null = null; 
@@ -26,11 +26,9 @@ export class WorkoutWS{
             webSocketFactory: () => new SockJS(`${environment.wsUrl}`), 
             reconnectDelay: 3000, 
             onConnect: () => {
-                console.log('WS kopplat')
 
                 this.client!.subscribe('/user/queue/create-response', (message: IMessage) => {
                     const response = JSON.parse(message.body);
-                    console.log('Createsessionresponsen:', response); 
                 })
                 
                 this.subscribedCodes.forEach(code => {

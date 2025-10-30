@@ -29,6 +29,5 @@ export async function getAllWorkouts(userId : number): Promise<WorkoutList[]> {
         }, 
     });
     const result =  await response.json();
-    console.log(result);
     return result; 
 }

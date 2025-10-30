@@ -20,6 +20,8 @@ export class Homepage implements OnInit{
 
   // Lista av meddelanden, behöver separera botmeddelanden från promptsen så vi kan bestämma om det ska visas som skickats från en själv eller till en
   messages: { text: string; from: 'user' | 'bot' }[] = [];
+
+  usernameToShow = localStorage.getItem('username'); 
   
   constructor(private workoutService: WorkoutService) {}
 
@@ -103,7 +105,6 @@ export class Homepage implements OnInit{
 
       this.workoutList = await this.workoutService.fetchWorkouts();
 
-      console.log(this.workoutList);
 
       this.workoutName = '';
       this.exercises = [{ exerciseName: '', weight: 0, completed: false }];
@@ -117,7 +118,6 @@ export class Homepage implements OnInit{
   async ngOnInit() {
     try {
       this.workoutList = await this.workoutService.fetchWorkouts();
-      console.log(this.workoutList);
     } catch (err){
       console.error('Fetch misslyckades', err);
     } finally {

@@ -1,59 +1,34 @@
-# Workoutfrontend
+# Workouttrackerfrontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.2.
+Detta är frontenden till ett workouttracker projekt. 
 
-## Development server
+I workouttracker så kan man som registrerad och inloggad användare skapa träningspass, dessa träningspass kan man sedan genomföra själv eller med andra. Det finns även möjlighet att köpa premium workoutpass via vår Stripeintegration (Mockat kort: 424242424242424242 och resten strunt samma så länge giltiga inputs). 
 
-To start a local development server, run:
+Vi har även en hjälpsam AI-chatbot som kan hjälpa er med att konstruera ett träningspass som passar era behov och önskemål. 
 
-```bash
-ng serve
-```
+Appen kan köras lokalt givet att man också kör mot lokal backend eller mot deployad backend. 
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Appen finns även deployad, länk till deployad/online version finns ängst ner i denna readme.
 
-## Code scaffolding
+Appen har byggts genom flera angular komponenter genererade genom angular cli och kommandot ng g c, har sedan byggt upp drygt en komponent per sida och vissa gränsöverskridande komponenter (header och footer).
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+# Techstack:
 
-```bash
-ng generate component component-name
-```
+- TypeScript
+- Angular
+- Tailwind
+- Websocket
+- Stripe 
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+# Start
 
-```bash
-ng generate --help
-```
+Appen startas lokalt genom två steg:
 
-## Building
+    npm install (detta installerar allting som är i projektet baserat på package.json).
+    ng serve (detta startar appen lokalt på localhost:4200).
 
-To build the project run:
+För att appen ska fungera behöver du köra backenden först, instruktioner för att göra detta finns i backend repot. 
 
-```bash
-ng build
-```
+Backend repo: https://github.com/YLudvig/Workouttracker
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Deployad sida: 

@@ -1,5 +1,5 @@
 
-// Skapar typoer som motsvarar vad backend skickar för att typsäkra frontenden mer 
+// Skapar typer som motsvarar vad backend skickar för att typsäkra frontenden mer 
 export interface Exercise {
     exerciseId: number; 
     exerciseName: string; 

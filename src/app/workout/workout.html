@@ -86,15 +86,4 @@
       Avsluta sessionen
     </button>
   </div>
-
-  <div>
-    <p>Event logs:</p>
-    <ul>
-      @for(m of messages; track $index){
-      <li>{{ m }}</li>
-      } @if(messages.length === 0) {
-      <li>Inga events ännu</li>
-      }
-    </ul>
-  </div>
 </div>
