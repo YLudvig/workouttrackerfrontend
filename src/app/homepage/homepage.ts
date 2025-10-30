@@ -105,7 +105,6 @@ export class Homepage implements OnInit{
 
       this.workoutList = await this.workoutService.fetchWorkouts();
 
-      console.log(this.workoutList);
 
       this.workoutName = '';
       this.exercises = [{ exerciseName: '', weight: 0, completed: false }];
@@ -119,7 +118,6 @@ export class Homepage implements OnInit{
   async ngOnInit() {
     try {
       this.workoutList = await this.workoutService.fetchWorkouts();
-      console.log(this.workoutList);
     } catch (err){
       console.error('Fetch misslyckades', err);
     } finally {

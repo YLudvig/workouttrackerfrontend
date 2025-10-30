@@ -11,7 +11,6 @@ export class Webbshop {
   // Kallar på backenden där all logien sköts för att köpa en stripeProdukt 
   async stripePurchase(priceId: string){
     const response = await buyStripeItem(priceId);
-    console.log(response);
   }
 
 }

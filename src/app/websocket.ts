@@ -26,11 +26,9 @@ export class WorkoutWS{
             webSocketFactory: () => new SockJS(`${environment.wsUrl}`), 
             reconnectDelay: 3000, 
             onConnect: () => {
-                console.log('WS kopplat')
 
                 this.client!.subscribe('/user/queue/create-response', (message: IMessage) => {
                     const response = JSON.parse(message.body);
-                    console.log('Createsessionresponsen:', response); 
                 })
                 
                 this.subscribedCodes.forEach(code => {

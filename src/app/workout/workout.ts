@@ -43,7 +43,6 @@ export class Workout implements OnInit, OnDestroy{
   // När går in på sidan subscribear till WS
   async ngOnInit() {
     this.workoutList = await this.workoutService.getWorkoutList();
-    console.log(this.workoutList);
     this.ws.connect();
   }
 
