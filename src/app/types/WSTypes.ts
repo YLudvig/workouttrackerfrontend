@@ -1,5 +1,7 @@
 // Gör typer för att motsvara backend typningar 
 
+import { Exercise, Workout } from "./Workoutsession";
+
 export interface CreateSessionRequest{
     hostUserId: number; 
     workoutId?: number; 
@@ -25,5 +27,7 @@ export interface SessionEvent {
 export interface SessionPayload{
     sessionState?: string; 
     participants?: number[]; 
+    exercises?: Exercise[];
+    workout?: Workout | null; 
     [key: string]: any; 
 }
