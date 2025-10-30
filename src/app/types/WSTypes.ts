@@ -19,5 +19,11 @@ export interface SessionEvent {
     sessionCode: string; 
     actorUserId?: number; 
     event?: string; 
-    payload?: Record<string, any>; 
+    payload?: SessionPayload; 
+}
+
+export interface SessionPayload{
+    sessionState?: string; 
+    participants?: number[]; 
+    [key: string]: any; 
 }

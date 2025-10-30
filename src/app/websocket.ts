@@ -28,6 +28,11 @@ export class WorkoutWS{
             onConnect: () => {
                 console.log('WS kopplat')
 
+                this.client!.subscribe('/user/queue/create-response', (message: IMessage) => {
+                    const response = JSON.parse(message.body);
+                    console.log('Createsessionresponsen:', response); 
+                })
+                
                 this.subscribedCodes.forEach(code => {
                     if (!this.subscribedCodes.has(code)){
                         this.subscribeToSession(code, () => {});
@@ -37,6 +42,8 @@ export class WorkoutWS{
             onStompError: (frame) => console.error('WS error', frame),
         })
         this.client.activate();
+
+        
     }
 
 

@@ -6,13 +6,66 @@
     aria-label="Välj träningspass"
 >
 @for (workout of workoutList; track $index) {
-    <option [value]="workout.workout.workoutName">
+    <option [value]="workout.workout.workoutId">
         {{workout.workout.workoutName}}
     </option>
 }
 </select>
 
-<button (click)="startSession()">Starta träningspass</button>
+<div class="mx-auto p-4 max-w-2xl">
+
+    <h3>Session</h3>
+
+    <div>
+        <button (click)="onCreateSession()" class="px-3 py-1 bg-blue-500 text-white rounded">Skapa session</button>
+
+        <br>
+
+        <button (click)="onStartSession()" class="px-3 py-1 bg-blue-500 text-white rounded">Starta session</button>
+
+        @if (createdSessionCode) {
+            <p>Sessionskod för folk att joina din workout: {{createdSessionCode}}</p>
+        }
+
+    </div>
+
+    <div class="flex items-center space-x-3 mb-4">
+        <input 
+            [(ngModel)]="joinCode"
+            placeholder="Fyll i sessionskod för session du vill gå med i"
+            class="flex-1 px-3 py-1 border rounded"
+        >
+        <button (click)="onJoin()" class="px-3 py-1 bg-blue-500 text-white rounded">Gå med i session</button>
+    </div>
+
+    @if (currentSessionCode){
+        <div>
+            <p>Subscribad till session: {{currentSessionCode}}</p>
+        </div>
+    }
+
+    <div>
+        <button (click)="onSendUpdate()" class="px-3 py-1 bg-blue-500 text-white rounded">Testa uppdateringsmetoden</button>
+    </div>
+
+    <div>
+        <button (click)="onEndSession()" class="px-3 py-1 bg-blue-500 text-white rounded">Avsluta sessionen</button>
+    </div>
+
+    <div>
+        <p>Event logs: </p>
+        <ul>
+            @for(m of messages; track $index){
+                <li>{{m}}</li>
+            }
+            @if(messages.length === 0) {
+                <li>Inga events ännu</li>
+            }
+        </ul>
+    </div>
+
+</div>
+
 
 @if(session != null){
     <div>
