@@ -14,7 +14,7 @@ import { CreateSessionRequest, JoinSessionRequest, SessionEvent } from '../types
 })
 export class Workout implements OnInit, OnDestroy{
 
-  // tar in våra metoder 
+  // Tar in våra metoder 
   private ws = new WorkoutWS();
 
   constructor(private workoutService: WorkoutService, private zone: NgZone) {}
@@ -47,6 +47,7 @@ export class Workout implements OnInit, OnDestroy{
     this.ws.connect();
   }
 
+  // Körs när man lämnar sidan 
   ngOnDestroy() {
     if (this.currentSessionCode) {
       this.ws.unsubscribe(this.currentSessionCode);
@@ -55,7 +56,7 @@ export class Workout implements OnInit, OnDestroy{
   }
 
 
-  // Metod för att skapa en session 
+  // Metod för att skapa en session och sedan kopplas man till den skapade sessionen 
   onCreateSession(): void{
     const request: CreateSessionRequest = {hostUserId: Number(localStorage.getItem('userId')), workoutId: this.selectedWorkoutId}; 
 
@@ -77,7 +78,7 @@ export class Workout implements OnInit, OnDestroy{
 
   }
 
-  // Metod för att joina en session 
+  // Metod för att joina en session om du har deras sessionskod 
   onJoin(): void{
     if (!this.joinCode){
       this.addMessage('Ej ifylld sessionskod'); 
@@ -87,16 +88,20 @@ export class Workout implements OnInit, OnDestroy{
     const request : JoinSessionRequest = { sessionCode: this.joinCode.trim(), userId: Number(localStorage.getItem('userId'))};
     this.ws.joinSession(request);
 
+    // Om man var i en session redan så tas man bort från den så man kan joina en annan 
     if (this.currentSessionCode){
       this.ws.unsubscribe(this.currentSessionCode)
     };
 
+    // Subscribear till en session och nollställer inputen för sessionskod att joina 
     this.currentSessionCode = request.sessionCode; 
     this.ws.subscribeToSession(request.sessionCode, (sessionEvent: SessionEvent) => this.handleEvent(sessionEvent)); 
     this.joinCode = ''; 
     this.addMessage(`Sessionen du är subscribad till: ${request.sessionCode}`)
   }
 
+
+  // Skickar signal till backend att starta sessionen
   onStartSession() {
     const code = this.createdSessionCode || this.currentSessionCode; 
     if (!code){
@@ -109,6 +114,7 @@ export class Workout implements OnInit, OnDestroy{
   }
 
 
+  // Skickar signal till backend för att avsluta sessionen 
   onEndSession(): void {
     const code = this.createdSessionCode || this.currentSessionCode; 
     if (!code){
@@ -125,6 +131,7 @@ export class Workout implements OnInit, OnDestroy{
     if (this.messages.length > 100) this.messages.pop(); 
   }
 
+  // Metod som hanterar all information som kommer från backend och renderar beroende på type 
   private handleEvent(sessionEvent : SessionEvent): void {
     const type = sessionEvent.event || 'UNKNOWN'; 
     const actor = sessionEvent.actorUserId ?? 'unknwon actor'; 
@@ -144,9 +151,10 @@ export class Workout implements OnInit, OnDestroy{
     this.session!.workout = workout; 
     this.session!.sessionState = sessionState;
 
+
     if (type === 'SESSION_CREATED' && actor === Number(localStorage.getItem('userId'))){
       this.createdSessionCode = sessionEvent.sessionCode; 
-      this.addMessage(`Skapde session med sessionsod: ${sessionEvent.sessionCode}`); 
+      this.addMessage(`Skapde session med sessionskod: ${sessionEvent.sessionCode}`); 
 
       // Säkerställer att host är subscribad till topic 
       if (!this.currentSessionCode) {
@@ -170,15 +178,16 @@ export class Workout implements OnInit, OnDestroy{
 
   }
 
+  // Metod för att markera övning som färdig, denna är central för hur websocket fungerar i denna appen och kommer att förbättras med funktonalitet så att man måste klicka på klar lika många gånger som det är deltagare 
   markExerciseCompleted(exerciseId: number){
+    // Felhantering för fall där du på något sätt försöker åkalla detta utan att vara i en session 
     if (!this.currentSessionCode){
-      this.addMessage('Du ärinte i en session');
+      this.addMessage('Du är inte i en session');
       return; 
     }
 
     this.ws.sendUpdate(this.currentSessionCode, Number(localStorage.getItem('userId')), {exerciseId}); 
     this.addMessage(`Övning ${exerciseId} markerad som klar`); 
-
   }
 
 }
