@@ -1,81 +1,131 @@
 import { Injectable } from "@angular/core";
 import {Client, IMessage, StompSubscription} from '@stomp/stompjs'; 
 import SockJS from 'sockjs-client';
-import { BehaviorSubject } from "rxjs";
 import { environment } from "../environments/environment";
 import { WorkoutSession } from "./types/Workoutsession";
+import { CreateSessionRequest, JoinSessionRequest, SessionEvent } from "./types/WSTypes";
 
 
 @Injectable({providedIn: 'root'})
 export class WorkoutWS{
-    public client: Client; 
 
-    public sessionUpdates = new BehaviorSubject<WorkoutSession | null>(null);
 
-    constructor(){
+
+
+    private client: Client | null = null; 
+    // Lista över aktiva subscriptions
+    private activeSubscriptions = new Map<string, any>(); 
+    // används för att hållakoll på vilka koder som har subcribers och reconnecta om de dcar
+    private subscribedCodes = new Set<string>();
+
+    // Connecta till websocket
+    connect(): void{
+        if (this.client && this.client.active) return; 
+        
         this.client = new Client({
-            brokerURL: undefined, 
-            webSocketFactory: () => new SockJS(`${environment.wsUrl}?userId=${localStorage.getItem('userId')}`), 
-            reconnectDelay: 2500
+            webSocketFactory: () => new SockJS(`${environment.wsUrl}`), 
+            reconnectDelay: 3000, 
+            onConnect: () => {
+                console.log('WS kopplat')
+
+                this.subscribedCodes.forEach(code => {
+                    if (!this.subscribedCodes.has(code)){
+                        this.subscribeToSession(code, () => {});
+                    }
+                })
+            }, 
+            onStompError: (frame) => console.error('WS error', frame),
         })
-    }
-
-    // Metod för att connecta till WS
-    connect(onConnected?: (frame: any)=> void){
-        this.client.onConnect = (frame) => {
-            console.log('Connected:', frame);
-            console.log("Frame headers", frame.headers);
-            if (onConnected) onConnected(frame);
-        }; 
-
-        // Om stomp error
-        this.client.onStompError = (frame) => {
-            console.error('STOMP error:', frame);
-        };
-
-        // Om WS koppling bryts oväntat
-        this.client.onWebSocketClose = () => console.warn('WS stängt');
-
-        // Vid WS error
-        this.client.onWebSocketError = (err) => console.error('WS error', err); 
-
-        // Aktiverar client connection till WS
         this.client.activate();
     }
 
-    // WS subscribar till en specifik session 
-    subscribeToSession(sessionId: string): StompSubscription{
-        console.log(`Subscribad till: /topic/session/${sessionId}`)
-        return this.client.subscribe(`/topic/session/${sessionId}`, (message: IMessage) => {
-            const sessionData = JSON.parse(message.body);
-            console.log(sessionData);
-            this.sessionUpdates.next(sessionData);
+
+    // Subscribea till WS session för att få specifik info därifrån 
+    subscribeToSession(sessionCode : string, handler: (sessionEvent: SessionEvent) => void) : void{
+        if(!this.client || !this.client.active) {
+            throw new Error('WS inte kopplat');
+        }
+
+        if (this.activeSubscriptions.has(sessionCode)) this.unsubscribe(sessionCode);
+
+        const subscribe = this.client.subscribe(`/topic/session.${sessionCode}`, (message: IMessage) => {
+            try {
+                const payload = JSON.parse(message.body);
+                handler(payload);
+
+            } catch (err) {
+                console.error('Failed to parse message body', err, message.body); 
+            }
         }); 
+        this.activeSubscriptions.set(sessionCode, subscribe);
+        this.subscribedCodes.add(sessionCode);
     }
 
+    sendMessage(destination: string, payload: any): void{
+        if (!this.client || !this.client.active) throw new Error('Inte kopplad');
 
+        this.client.publish({
+            destination: `/app/${destination}`, 
+            body: JSON.stringify(payload)
+        })
+    }
 
-    sendMessage(destination: string, payload: any){
-        if (this.client.connected){
-            this.client.publish({
-                destination, 
-                body: JSON.stringify(payload)
-            })
-        } else {
-            console.error("WS error med sendMessage funktionen");
+    // Behöver ett sätt att unsubcribea användare från WS 
+    unsubscribe(sessionCode: string): void {
+        const session = this.activeSubscriptions.get(sessionCode);
+        if (session){
+            session.unsubscribe();
+            this.activeSubscriptions.delete(sessionCode);
         }
+        this.subscribedCodes.delete(sessionCode);
     }
 
-    // Uppdaterar en övning under session
-    updateExercise(sessionId: string, exercise: any){
-        this.sendMessage("/app/session/updateExercise", {sessionId, exercise});
-    }
-
-    // Kopplar loss från WS
-    disconnect(){
-        if (this.client.active){
-            console.log("Disconnectar från WS")
-            this.client.deactivate();
+    // Disconnecta från WS 
+    disconnect(): void {
+        if (this.client){
+            try { this.client.deactivate(); } catch (e) { console.warn('Error när du försökte deaktivera WS')}
         }
+        this.activeSubscriptions.clear();
+        this.subscribedCodes.clear();
+        this.client = null; 
     }
+
+    createSession(request: CreateSessionRequest): void {
+        this.sendMessage('session-create', request);
+    }
+
+    joinSession(request: JoinSessionRequest): void{
+        this.sendMessage('session-join', request);
+    }
+
+    startSession(sessionCode: string, hostUserId: number): void {
+        const sessionEvent : SessionEvent = {
+            sessionCode, 
+            actorUserId: hostUserId, 
+            event: 'START_REQUEST', 
+            payload: {}
+        }
+        this.sendMessage('session-start', sessionEvent)
+    }
+
+    sendUpdate(sessionCode: string, userId: number, payload: Record<string, any>): void {
+        const sessionEvent : SessionEvent = {
+            sessionCode, 
+            actorUserId: userId, 
+            event: 'BUTTON_PRESSED', 
+            payload
+        }
+        this.sendMessage('session-update', sessionEvent);
+    }
+
+    endSession(sessionCode: string, hostUserId: number): void {
+        const sessionEvent : SessionEvent = {
+            sessionCode, 
+            actorUserId: hostUserId, 
+            event: 'END_REQUEST', 
+            payload : {}
+        }
+        this.sendMessage('session-end', sessionEvent);
+    }
+
 }
