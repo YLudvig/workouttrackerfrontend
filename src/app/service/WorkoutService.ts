@@ -10,7 +10,7 @@ export class WorkoutService{
     private userId = localStorage.getItem('userId');
 
     async fetchWorkouts(): Promise<WorkoutList[]>{
-        if (this.workoutList.length === 0 && this.userId){
+        if (this.userId){
             const response =  await getAllWorkouts(Number(this.userId));
             this.workoutList = response;
         }

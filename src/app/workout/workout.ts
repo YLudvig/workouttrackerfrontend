@@ -109,15 +109,6 @@ export class Workout implements OnInit, OnDestroy{
   }
 
 
-  onSendUpdate(): void {
-    if (!this.currentSessionCode){
-      this.addMessage('Kan inte skicka uppdateringar då du inte är i en session');
-      return; 
-    }
-    this.ws.sendUpdate(this.currentSessionCode, Number(localStorage.getItem('userId')), { button: 'test', time: Date.now()})
-    this.addMessage('Uppdatering skickad'); 
-  }
-
   onEndSession(): void {
     const code = this.createdSessionCode || this.currentSessionCode; 
     if (!code){

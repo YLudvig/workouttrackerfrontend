@@ -1,4 +1,11 @@
 <div class="mx-auto p-4 max-w-2xl">
+  <h2>Här kan du välja vilken workout du vill köra, sedan kan du klicka på skapa session, 
+    efter det kan du invänta om du har några som ska gå med i träningspasset, 
+    efter de du tränar med gått med så kan du klicka på starta session, 
+    då kan ni alla se vilka övningar ni ska köra i passet, 
+    klicka på klar för att färdigmarkera 
+</h2>
+
   <label for="selectWorkout">Välj träningspass:</label>
   <select id="selectWorkout" [(ngModel)]="selectedWorkoutId" aria-label="Välj träningspass">
     @for (workout of workoutList; track $index) {
@@ -8,29 +15,25 @@
     }
   </select>
 
-  <h3>Session</h3>
-
   <div>
-    <button (click)="onCreateSession()" class="px-3 py-1 bg-blue-500 text-white rounded">
+    <button (click)="onCreateSession()" class="px-3 py-1 bg-blue-500 text-white rounded mb-2 mt-2">
       Skapa session
     </button>
 
     <br />
 
-    <button (click)="onStartSession()" class="px-3 py-1 bg-blue-500 text-white rounded">
+    <button (click)="onStartSession()" class="px-3 py-1 bg-blue-500 text-white rounded mb-2 mt-2">
       Starta session
     </button>
 
     @if (createdSessionCode) {
     <p>Sessionskod för folk att joina din workout: {{ createdSessionCode }}</p>
+    } @if(session != null){
+    <div>
+      <h3>Träningspass: {{ session.workoutName }}</h3>
+      <p>Antal deltagare i träningspasset just nu: {{ session.participantsIds.length }}</p>
+    </div>
     }
-    @if(session != null){
-        <div>
-            <h3>Träningspass: {{ session.workoutName }}</h3>
-            <p>Antal deltagare i träningspasset just nu: {{ session.participantsIds.length }}</p>
-        </div>
-}
-
   </div>
 
   <div class="flex items-center space-x-3 mb-4">
@@ -50,38 +53,33 @@
     <p>Subscribad till session: {{ currentSessionCode }}</p>
 
     <table class="w-full mt-2 text-sm border">
-        <thead class="bg-gray-100">
-            <tr>
-                <th class="text-left p-2 border-b">Övning</th>
-                <th class="text-left p-2 border-b">Vikt</th>
-                <th class="text-left p-2 border-b">Status</th>
-                <th class="text-left p-2 border-b">Åtgärd</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (exercise of session.exercises; track $index) {
-                <tr>
-                    <td class="p-2 border-b">{{exercise.exerciseName}}</td>
-                    <td class="p-2 border-b">{{exercise.weight}}</td>
-                    <td class="p-2 border-b"><p>{{exercise.completed ? 'Klar' : 'Ej klar'}}</p></td>
-                    <td class="p-2 border-b">
-                        @if (!exercise.completed) {
-                            <button (click)="markExerciseCompleted(exercise.exerciseId)">Markera som klar</button>
-                        }
-                    </td>
-                </tr>
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="text-left p-2 border-b">Övning</th>
+          <th class="text-left p-2 border-b">Vikt</th>
+          <th class="text-left p-2 border-b">Status</th>
+          <th class="text-left p-2 border-b">Åtgärd</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (exercise of session.exercises; track $index) {
+        <tr>
+          <td class="p-2 border-b">{{ exercise.exerciseName }}</td>
+          <td class="p-2 border-b">{{ exercise.weight }}</td>
+          <td class="p-2 border-b">
+            <p>{{ exercise.completed ? 'Klar' : 'Ej klar' }}</p>
+          </td>
+          <td class="p-2 border-b">
+            @if (!exercise.completed) {
+            <button (click)="markExerciseCompleted(exercise.exerciseId)">Markera som klar</button>
             }
-        </tbody>
+          </td>
+        </tr>
+        }
+      </tbody>
     </table>
-
   </div>
   }
-
-  <div>
-    <button (click)="onSendUpdate()" class="px-3 py-1 bg-blue-500 text-white rounded">
-      Testa uppdateringsmetoden
-    </button>
-  </div>
 
   <div>
     <button (click)="onEndSession()" class="px-3 py-1 bg-blue-500 text-white rounded">
