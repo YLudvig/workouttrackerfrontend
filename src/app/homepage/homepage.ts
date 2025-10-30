@@ -20,6 +20,8 @@ export class Homepage implements OnInit{
 
   // Lista av meddelanden, behöver separera botmeddelanden från promptsen så vi kan bestämma om det ska visas som skickats från en själv eller till en
   messages: { text: string; from: 'user' | 'bot' }[] = [];
+
+  usernameToShow = localStorage.getItem('username'); 
   
   constructor(private workoutService: WorkoutService) {}
 
