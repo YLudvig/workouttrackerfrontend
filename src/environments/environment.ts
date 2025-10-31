@@ -1,5 +1,5 @@
 export const environment = {
     production: false, 
-    backendApiUrl: 'http://localhost:8080/api', 
-    wsUrl: 'http://localhost:8080/ws'
+    backendApiUrl: 'https://sea-turtle-app-qgvyw.ondigitalocean.app/api', 
+    wsUrl: 'https://sea-turtle-app-qgvyw.ondigitalocean.app/ws'
 };
