@@ -31,4 +31,4 @@ För att appen ska fungera behöver du köra backenden först, instruktioner fö
 
 Backend repo: https://github.com/YLudvig/Workouttracker
 
-Deployad sida: 
+Deployad sida: https://sea-lion-app-9hnsk.ondigitalocean.app/
